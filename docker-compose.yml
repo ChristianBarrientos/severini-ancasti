@@ -1,22 +1,35 @@
 version: '2'
 services:
-
   back:
-    image: ancasti-back
+    build: ./anc-pensar-back
+    command: npm start
     ports:
       - "3000:3000"
+    depends_on:
+      - bd
     env_file:
-      - back.env
-      
+      - ./anc-pensar-back/.env
+   # environment:
+   #   TYPEORM_HOST: bd
+   #   TYPEORM_USERNAME: ancasti_user
+   #  TYPEORM_PASSWORD: Capresca.2019
+   #  TYPEORM_DATABASE: ancasti
+   #  TYPEORM_PORT: 3306
   bd:
-    image: mysql:latest
+    image: mysql:latest #"someregisty/mysql" #mysql:latest
     volumes:
       - "./.mysql-data/db:/var/lib/mysql"
     restart: always
     ports:
-      - 3306:3306
+      - "3306:3306" #"127.0.0.1:3307:3306" #3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: asdqw12g34g34gg12
+      MYSQL_ROOT_PASSWORD: Capresca.2019
       MYSQL_DATABASE: ancasti
-      MYSQL_USER: root
-      MYSQL_PASSWORD: asdqw12g34g34gg12
+      MYSQL_USER: ancasti_user
+      MYSQL_PASSWORD: Capresca.2019
+
+#ALTER USER 'root'@'localhost' IDENTIFIED BY 'Capresca.2019';
+#GRANT ALL PRIVILEGES ON *.* TO 'ancasti_user'@'localhost' IDENTIFIED BY 'Capresca.2019';
+#CREATE DATABASE ancasti;
+#DROP DATABASE ancasti;
+
