@@ -1,21 +1,7 @@
 version: '2'
 services:
-  back:
-    build: ./anc-pensar-back
-    command: npm start
-    ports:
-      - "3000:3000"
-    depends_on:
-      - bd
-    env_file:
-      - ./anc-pensar-back/.env
-   # environment:
-   #   TYPEORM_HOST: bd
-   #   TYPEORM_USERNAME: ancasti_user
-   #  TYPEORM_PASSWORD: Capresca.2019
-   #  TYPEORM_DATABASE: ancasti
-   #  TYPEORM_PORT: 3306
-  bd:
+  
+  bd_mysql:
     image: mysql:latest #"someregisty/mysql" #mysql:latest
     volumes:
       - "./.mysql-data/db:/var/lib/mysql"
@@ -23,11 +9,45 @@ services:
     ports:
       - "3306:3306" #"127.0.0.1:3307:3306" #3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: Capresca.2019
+      MYSQL_ROOT_PASSWORD: ANC.2020
       MYSQL_DATABASE: ancasti
       MYSQL_USER: ancasti_user
-      MYSQL_PASSWORD: Capresca.2019
+      MYSQL_PASSWORD: ANC.2020
 
+  front:
+    build: ./anc-pensar-front
+    command: ng serve --host 0.0.0.0 --poll=500
+    ports:
+      - 80:8080
+    expose:
+      - 80
+    #user: ${CURRENT_UID}
+    #volumes:
+    #  - ./angular-project:/usr/app/angular-project
+  
+  back:
+    build: ./anc-pensar-back
+    command: node dist/main
+    ports:
+      - "3000:3000"
+    depends_on:
+      - bd_mysql
+    env_file:
+      - ./anc-pensar-back/.env
+  
+  #afip_api:
+  #  container_name: afip-api
+  #  restart: always
+  #  build: ./afip-rest
+  #  ports:
+  #    - "3000:3000"
+  
+   # environment:
+   #   TYPEORM_HOST: bd
+   #   TYPEORM_USERNAME: ancasti_user
+   #  TYPEORM_PASSWORD: Capresca.2019
+   #  TYPEORM_DATABASE: ancasti
+   #  TYPEORM_PORT: 3306
 #ALTER USER 'root'@'localhost' IDENTIFIED BY 'Capresca.2019';
 #GRANT ALL PRIVILEGES ON *.* TO 'ancasti_user'@'localhost' IDENTIFIED BY 'Capresca.2019';
 #CREATE DATABASE ancasti;

@@ -3,6 +3,9 @@ Faltan Variables de entorno, se pueden agregar varialbes de entorno: src/app/con
 Donde se declara la conexion con el back?
 #App Back
 Error en ultima version, 
-Donce se declara la conexion con la api de afip?
+No puede traer JWTSecret: [Nest] 17659   - 2020-12-04 10:41:39   [ExceptionHandler] JwtStrategy requires a secret or key +1ms
+Donde se declara la conexion con la api de afip?
 Agregar los host remotos en variables de entorno
 #Afip app
+No encuentra archivo .env
+Flatan archivo .key .pem? 

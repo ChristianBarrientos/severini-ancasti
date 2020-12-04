@@ -1,13 +1,18 @@
-FROM node:10-alpine
-RUN mkdir -p /app-back && chown -R node:node /app-back
-WORKDIR /app-back
+FROM node:12-alpine
+
+RUN mkdir -p /usr/app/
+
+WORKDIR /usr/app/
+
 COPY package*.json ./
-USER node
-RUN npm install
-#ENV DB_MONGO=mongodb+srv://root:oj8YDLJbUlQKicge@cluster0-ker89.mongodb.net/mascoteros
+
+#RUN npm install
 
 COPY --chown=node:node . .
-EXPOSE 3000
-#CMD [ "node", "index.js" ]
-CMD [ "npm", "start" ] 
-#start:prod
+
+RUN npm install -g @angular/cli
+
+EXPOSE 8080
+
+WORKDIR /usr/app/angular-project
+
