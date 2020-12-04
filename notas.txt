@@ -1,0 +1,8 @@
+#App Front
+Faltan Variables de entorno, se pueden agregar varialbes de entorno: src/app/config
+Donde se declara la conexion con el back?
+#App Back
+Error en ultima version, 
+Donce se declara la conexion con la api de afip?
+Agregar los host remotos en variables de entorno
+#Afip app
