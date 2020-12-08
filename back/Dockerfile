@@ -1,18 +1,16 @@
-FROM node:12-alpine
-
-RUN mkdir -p /usr/app/
-
-WORKDIR /usr/app/
-
-COPY package*.json ./
-
-#RUN npm install
-
-COPY --chown=node:node . .
-
-RUN npm install -g @angular/cli
-
-EXPOSE 8080
-
-WORKDIR /usr/app/angular-project
-
+### STAGE 1: Build ###
+FROM node:12.7-alpine 
+#AS build
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm start:seeder 
+#npm run build
+#EXPOSE 4200
+# Serve the app
+CMD ["npm", "start"]
+### STAGE 2: Run ###
+#FROM nginx:1.17.1-alpine
+#COPY nginx.conf /etc/nginx/nginx.conf
+#COPY --from=build /usr/src/app/dist/main /usr/share/nginx/html

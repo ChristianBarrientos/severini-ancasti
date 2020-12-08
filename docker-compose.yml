@@ -1,46 +1,86 @@
-version: '2'
+version: '3.5'
 services:
-  
-  bd_mysql:
-    image: mysql:latest #"someregisty/mysql" #mysql:latest
-    volumes:
-      - "./.mysql-data/db:/var/lib/mysql"
-    restart: always
+  back:
+    depends_on:
+      - bd_mysql
+    build:
+      context: ./anc-pensar-back
+      dockerfile: Dockerfile
+    container_name: app-back
+    restart: unless-stopped
+    #command: npm run build && npm run start #node dist/main
     ports:
-      - "3306:3306" #"127.0.0.1:3307:3306" #3306:3306
+      - "3000:3000"
+    
+    env_file:
+      - ./anc-pensar-back/.env
+    #environment:
+    #  TYPEORM_DATABASE: ancasti
+    #  TYPEORM_USERNAME: root
+    #  TYPEORM_PASSWORD: ANC.2020
+    networks:
+      - app-network
+
+  bd_mysql:
+    restart: unless-stopped
+    image: mysql:5.7
+    command:
+      --disable-partition-engine-check
+      --innodb_use_native_aio=0
+      --max_allowed_packet=128M
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    container_name: bd_mysql
+    ports:
+      - "3306:3306" 
     environment:
       MYSQL_ROOT_PASSWORD: ANC.2020
       MYSQL_DATABASE: ancasti
-      MYSQL_USER: ancasti_user
+      MYSQL_USER: root
       MYSQL_PASSWORD: ANC.2020
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - app-network
 
   front:
-    build: ./anc-pensar-front
-    command: ng serve --host 0.0.0.0 --poll=500
+    build:
+      context: ./anc-pensar-front
+      dockerfile: Dockerfile
+    container_name: app-front2  
+    restart: unless-stopped
     ports:
-      - 80:8080
-    expose:
-      - 80
-    #user: ${CURRENT_UID}
-    #volumes:
-    #  - ./angular-project:/usr/app/angular-project
-  
-  back:
-    build: ./anc-pensar-back
-    command: node dist/main
-    ports:
-      - "3000:3000"
-    depends_on:
-      - bd_mysql
+      -  80:80
     env_file:
-      - ./anc-pensar-back/.env
+      - ./anc-pensar-front/.env
+    networks:
+      - app-network
   
-  #afip_api:
-  #  container_name: afip-api
-  #  restart: always
-  #  build: ./afip-rest
-  #  ports:
-  #    - "3000:3000"
+
+      
+ # afip_api:
+ #   build:
+  #    context: ./afip-rest
+ #     dockerfile: Dockerfile
+ #   container_name: afip-api
+ #   restart: unless-stopped
+ #   #ports:
+    #  - "3000:3000"    
+  #  networks:
+ #     - app-network 
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+ # node_modules:
+
+
   
    # environment:
    #   TYPEORM_HOST: bd
@@ -53,3 +93,21 @@ services:
 #CREATE DATABASE ancasti;
 #DROP DATABASE ancasti;
 
+  ##CONEXION AL BACK
+   # environment:
+   #   - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+   #   - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+   # volumes:
+   #    - ./app-ui:/usr/src/app/app-ui
+   #    - /usr/src/app/app-ui/node_modules
+
+  #front:
+   # build: ./anc-pensar-front
+   # command: ng serve --host 0.0.0.0 --poll=500
+   # ports:
+   #   - 80:8080
+    #expose:
+   #   - 80
+    #user: ${CURRENT_UID}
+    #volumes:
+    #  - ./angular-project:/usr/app/angular-project

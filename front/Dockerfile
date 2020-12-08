@@ -1,16 +1,15 @@
-FROM node:alpine as builder
-RUN mkdir -p /app-front && chown -R node:node /app-front
-WORKDIR /app-front
-COPY package*.json ./
-USER node
+### STAGE 1: Build ###
+FROM node:12.7-alpine AS build
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
 RUN npm install
-COPY --chown=node:node . .
-ENV APP_BACKEND_URL='http://localhost:3000/api/v1'
-#RUN npm run build
-RUN npm start
-
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app-front/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY . .
+RUN npm run build
+#EXPOSE 4200
+# Serve the app
+CMD ["npm", "start"]
+### STAGE 2: Run ###
+FROM nginx:1.17.1-alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /usr/src/app/dist/anc-pensar /usr/share/nginx/html
+#RUN ng serve --host 0.0.0.0 --poll=500
