@@ -15,9 +15,9 @@ services:
     env_file:
       - ./anc-pensar-back/.env
     #environment:
-    #  TYPEORM_DATABASE: ancasti
+    #  TYPEORM_DATABASE: BDNAME
     #  TYPEORM_USERNAME: root
-    #  TYPEORM_PASSWORD: ANC.2020
+    #  TYPEORM_PASSWORD: PASSBD
     networks:
       - app-network
 
@@ -37,10 +37,10 @@ services:
     ports:
       - "3306:3306" 
     environment:
-      MYSQL_ROOT_PASSWORD: ANC.2020
-      MYSQL_DATABASE: ancasti
+      MYSQL_ROOT_PASSWORD: PASSROOT
+      MYSQL_DATABASE: BDNAME
       MYSQL_USER: root
-      MYSQL_PASSWORD: ANC.2020
+      MYSQL_PASSWORD: PASSBD
     volumes:
       - dbdata:/data/db
     networks:
@@ -84,14 +84,14 @@ volumes:
   
    # environment:
    #   TYPEORM_HOST: bd
-   #   TYPEORM_USERNAME: ancasti_user
-   #  TYPEORM_PASSWORD: Capresca.2019
-   #  TYPEORM_DATABASE: ancasti
+   #   TYPEORM_USERNAME: USERNAME
+   #  TYPEORM_PASSWORD: BDPASS
+   #  TYPEORM_DATABASE: BDNAME
    #  TYPEORM_PORT: 3306
-#ALTER USER 'root'@'localhost' IDENTIFIED BY 'Capresca.2019';
-#GRANT ALL PRIVILEGES ON *.* TO 'ancasti_user'@'localhost' IDENTIFIED BY 'Capresca.2019';
-#CREATE DATABASE ancasti;
-#DROP DATABASE ancasti;
+#ALTER USER 'root'@'localhost' IDENTIFIED BY 'SUPERPASS';
+#GRANT ALL PRIVILEGES ON *.* TO 'USER'@'localhost' IDENTIFIED BY 'SUPERPASS';
+#CREATE DATABASE BDNAME;
+#DROP DATABASE BDNAME;
 
   ##CONEXION AL BACK
    # environment:
